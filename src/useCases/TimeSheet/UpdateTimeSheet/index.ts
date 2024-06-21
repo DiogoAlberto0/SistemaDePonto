@@ -1,13 +1,13 @@
-import { InMemoryPositionRepository } from "../../../repositories/implementations/inMemoryPositionRepository";
-import { InMemoryTimeSheetRepository } from "../../../repositories/implementations/inMemoryTimeSheetRepository";
-import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { UpdateTimeSheetController } from "./UpdateTimeSheetController";
 import { UpdateTimeSheetuseCase } from "./UpdateTimeSheetUseCase";
+import { PrismaTimeSheetRepository } from "../../../repositories/prismaImplementation/prismaTimeSheetRepository";
+import { PrismaUserRepository } from "../../../repositories/prismaImplementation/prismaUserRepository";
+import { PrismaPositionRepository } from "../../../repositories/prismaImplementation/prismaPositionRepository";
 
 
-const timeSheetRepository = new InMemoryTimeSheetRepository()
-const userRepository = new InMemoryUserDatabase()
-const positionRepository = new InMemoryPositionRepository()
+const timeSheetRepository = new PrismaTimeSheetRepository()
+const userRepository = new PrismaUserRepository()
+const positionRepository = new PrismaPositionRepository()
 
 const updateTimeSheetUseCase = new UpdateTimeSheetuseCase(timeSheetRepository, userRepository, positionRepository)
 

@@ -18,10 +18,10 @@ const createStationUseCase = new CreateStationUseCase(stationRepository, new Cnp
 //user
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { CreateUserUseCase } from "../../User/CreateUser/CreateUserUseCase";
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
 const userRepository = new InMemoryUserDatabase()
-const hashPasswordUtils = new HashPassword()
-const createUserUseCase = new CreateUserUseCase(userRepository, hashPasswordUtils, stationRepository, positionRepository) 
+const passwordUtilsUtils = new PasswordUtils()
+const createUserUseCase = new CreateUserUseCase(userRepository, passwordUtilsUtils, stationRepository, positionRepository) 
 
 //timeSheet
 import { InMemoryTimeSheetRepository } from "../../../repositories/implementations/inMemoryTimeSheetRepository";
@@ -119,7 +119,7 @@ describe('get time sheet tests', async () => {
                 adminId: userFuncionario1.id,
                 userId: userFuncionario2.id,
             })
-        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registerYear, month: funcionario1TimeSheet.props.registerMonth }])
+        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registeredYear, month: funcionario1TimeSheet.props.registeredMonth }])
     })
 
     it('should not be possible to an encarregado get user timesheet from another station', async () => {
@@ -137,14 +137,14 @@ describe('get time sheet tests', async () => {
                 adminId: userFuncionario1.id,
                 userId: userFuncionario2.id,
             })
-        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registerYear, month: funcionario1TimeSheet.props.registerMonth }])
+        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registeredYear, month: funcionario1TimeSheet.props.registeredMonth }])
 
         await expect(
             getMonthsAndYearsUseCase.execute({
                 adminId: userFuncionario2.id,
                 userId: userFuncionario2.id,
             })
-        ).resolves.toStrictEqual([{ year: funcionario2TimeSheet.props.registerYear, month: funcionario2TimeSheet.props.registerMonth }])
+        ).resolves.toStrictEqual([{ year: funcionario2TimeSheet.props.registeredYear, month: funcionario2TimeSheet.props.registeredMonth }])
     })
 
     it('should be possible to encarregado get timeSheet from any funcionario from the same station', async () => {
@@ -153,7 +153,7 @@ describe('get time sheet tests', async () => {
                 adminId: userEncarregado1.id,
                 userId: userFuncionario1.id,
             })
-        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registerYear, month: funcionario1TimeSheet.props.registerMonth }])
+        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registeredYear, month: funcionario1TimeSheet.props.registeredMonth }])
     })
 
     it('should be possible to a gerente get a timeSheet from any user', async () => {
@@ -162,14 +162,14 @@ describe('get time sheet tests', async () => {
                 adminId: userGerente.id,
                 userId: userFuncionario1.id,
             })
-        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registerYear, month: funcionario1TimeSheet.props.registerMonth }])
+        ).resolves.toStrictEqual([{ year: funcionario1TimeSheet.props.registeredYear, month: funcionario1TimeSheet.props.registeredMonth }])
 
         await expect(
             getMonthsAndYearsUseCase.execute({
                 adminId: userGerente.id,
                 userId: userFuncionario2.id,
             })
-        ).resolves.toStrictEqual([{ year: funcionario2TimeSheet.props.registerYear, month: funcionario2TimeSheet.props.registerMonth }])
+        ).resolves.toStrictEqual([{ year: funcionario2TimeSheet.props.registeredYear, month: funcionario2TimeSheet.props.registeredMonth }])
 
         await expect(
             getMonthsAndYearsUseCase.execute({

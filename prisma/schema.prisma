@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Position {
+  id              String @id @default(uuid())
+  office          String @unique
+  privillegeLevel Int    @default(1)
+
+  users User[]
+}
+
+model Station {
+  id        String @id @default(uuid())
+  name      String @unique
+  cnpj      String @unique
+  latitude  Float
+  longitude Float
+  users     User[]
+}
+
+model User {
+  id    String @id @default(uuid())
+  name  String
+  phone String @unique
+  hash  String
+
+  positionId String
+  position   Position @relation(fields: [positionId], references: [id])
+
+  stationId String
+  station   Station @relation(fields: [stationId], references: [id])
+
+  timeSheets TimeSheet[]
+}
+
+model TimeSheet {
+  id String @id @default(uuid())
+
+  registeredDay   Int
+  registeredMonth Int
+  registeredYear  Int
+
+  first_entrance Int?
+  first_exit Int?
+  second_entrance Int?
+  second_exit Int?
+  missed Boolean @default(false)
+  medicalCertificate Boolean @default(false)
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}

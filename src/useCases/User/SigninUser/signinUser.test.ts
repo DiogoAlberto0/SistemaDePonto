@@ -16,18 +16,18 @@ const createPositionUseCase = new CreatePositionUseCase(positionRepository)
 
 //userUseCase
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase"
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils"
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils"
 import { CreateUserUseCase } from "../CreateUser/CreateUserUseCase"
-const hashPass = new HashPassword()
+const passwordUtils = new PasswordUtils()
 const userRepository = new InMemoryUserDatabase()
-const createUserUseCase = new CreateUserUseCase(userRepository, hashPass, stationRepository, positionRepository)
+const createUserUseCase = new CreateUserUseCase(userRepository, passwordUtils, stationRepository, positionRepository)
 
 //signinUseCase
 import { TokenUtils } from "../../../utils/jwt/implementation/token.utils"
 import { SigninUserUseCase } from "./SigninUserUseCase"
 import { ApiError } from '../../../entities/Error'
 const tokenUtils = new TokenUtils()
-const signinUserUseCase = new SigninUserUseCase(userRepository, hashPass, tokenUtils)
+const signinUserUseCase = new SigninUserUseCase(userRepository, passwordUtils, tokenUtils)
 
 
 

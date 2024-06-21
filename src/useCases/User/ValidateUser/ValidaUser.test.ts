@@ -16,20 +16,20 @@ const createPositionUseCase = new CreatePositionUseCase(positionRepository)
 
 //USER
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
 import { TokenUtils } from "../../../utils/jwt/implementation/token.utils";
 
 const userRepository = new InMemoryUserDatabase()
 const tokenUtils = new TokenUtils()
-const hashPasswordUtils = new HashPassword()
+const passwordUtilsUtils = new PasswordUtils()
 //CreateUserUseCase
 import { CreateUserUseCase } from "../CreateUser/CreateUserUseCase";
-const createUserUseCase = new CreateUserUseCase(userRepository, hashPasswordUtils, stationRepository, positionRepository)
+const createUserUseCase = new CreateUserUseCase(userRepository, passwordUtilsUtils, stationRepository, positionRepository)
 
 //signinUseCase
 import { SigninUserUseCase } from "../SigninUser/SigninUserUseCase";
 import { ValidateUserUseCase } from "./ValidateUserUseCase";
-const signinUseCase = new SigninUserUseCase(userRepository, hashPasswordUtils, tokenUtils)
+const signinUseCase = new SigninUserUseCase(userRepository, passwordUtilsUtils, tokenUtils)
 
 //validateUser
 const validateUserUseCase = new ValidateUserUseCase(userRepository, positionRepository, tokenUtils)

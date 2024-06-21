@@ -27,9 +27,11 @@ export class CreateUserController {
                 stationId
             })
 
-            return response.status(201).send()
+            return response.status(201).send({
+                message: 'Usuário criado com sucesso'
+            })
         } catch (error: any) {
-            return response.status(400).send({
+            return response.status(error.status || 500).send({
                 message: error.message || 'Unexpected error'
             })
         }

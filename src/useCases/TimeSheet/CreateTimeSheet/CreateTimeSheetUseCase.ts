@@ -32,9 +32,9 @@ export class CreateTimeSheetUseCase {
         if(!existentTimeSheet) {
             const timeSheet = new TimeSheet({
                 userId: data.userId,
-                registerDay: data.createdAt.getDate(),
-                registerMonth: data.createdAt.getMonth(),
-                registerYear: data.createdAt.getFullYear(),
+                registeredDay: data.createdAt.getDate(),
+                registeredMonth: data.createdAt.getMonth(),
+                registeredYear: data.createdAt.getFullYear(),
                 clockin: {
                     first_entrance: data.createdAt.getTime(),
                     missed: false

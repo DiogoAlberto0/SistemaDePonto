@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { ApiError } from "../../../entities/Error";
 
 //utils
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
 import { DateUtils } from "../../../utils/date/implementation/DateUtils";
 
 //POSITION
@@ -22,7 +22,7 @@ const createStationUseCase = new CreateStationUseCase(stationRepository, new Cnp
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { CreateUserUseCase } from "../../User/CreateUser/CreateUserUseCase";
 const userRepository = new InMemoryUserDatabase()
-const createUserUseCase = new CreateUserUseCase(userRepository,new HashPassword(),stationRepository, positionRepository)
+const createUserUseCase = new CreateUserUseCase(userRepository,new PasswordUtils(),stationRepository, positionRepository)
 
 //TIMESHEET
 import { TimeSheet } from "../../../entities/TimeSheet";

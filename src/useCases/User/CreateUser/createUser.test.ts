@@ -18,9 +18,10 @@ const createPositionUseCase = new CreatePositionUseCase(positionRepository)
 
 import { InMemoryUserDatabase } from '../../../repositories/implementations/inMemoryUserDatabase'
 import { CreateUserUseCase } from './CreateUserUseCase'
-import { HashPassword } from '../../../utils/hash/implementation/hashPassword.utils'
+import { PasswordUtils } from '../../../utils/password/implementation/password.utils'
+import { ApiError } from '../../../entities/Error'
 const userRepository = new InMemoryUserDatabase()
-const hashUtils = new HashPassword()
+const hashUtils = new PasswordUtils()
 const createUserUseCase = new CreateUserUseCase(userRepository, hashUtils, stationRepository, positionRepository)
 
 
@@ -47,7 +48,7 @@ describe('Create user tests', async () => {
             password: '12345',
             stationId: station.id,
             positionId: position.id
-        })).rejects.toBeInstanceOf(Error)
+        })).rejects.toBeInstanceOf(ApiError)
     })
 
     it('should not be possible to create user with a same phone number', async () => {
@@ -65,7 +66,7 @@ describe('Create user tests', async () => {
             password: '135792468Diogo;',
             stationId: station.id,
             positionId: position.id
-        })).rejects.toBeInstanceOf(Error)
+        })).rejects.toBeInstanceOf(ApiError)
     })
 
     it('should not be possible to create user with a invalid station id', () => {
@@ -75,7 +76,7 @@ describe('Create user tests', async () => {
             password: '123456Diogo.',
             stationId: '123',
             positionId: position.id
-        })).rejects.toBeInstanceOf(Error)
+        })).rejects.toBeInstanceOf(ApiError)
     })
 
 

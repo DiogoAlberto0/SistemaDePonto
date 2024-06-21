@@ -1,17 +1,17 @@
-import { InMemoryPositionRepository } from "../../../repositories/implementations/inMemoryPositionRepository";
-import { InMemoryStationDatabase } from "../../../repositories/implementations/inMemoryStationDatabase";
-import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
+import { PrismaPositionRepository } from "../../../repositories/prismaImplementation/prismaPositionRepository";
+import { PrismaStationRepository } from "../../../repositories/prismaImplementation/prismaStationRepository";
+import { PrismaUserRepository } from "../../../repositories/prismaImplementation/prismaUserRepository";
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
 import { CreateUserController } from "./CreateUserController";
 import { CreateUserUseCase } from "./CreateUserUseCase";
 
 
-const inMemoryUserDatabase = new InMemoryUserDatabase()
-const inMemoryStationRepository = new InMemoryStationDatabase()
-const positionRepository = new InMemoryPositionRepository()
-const hashPassword = new HashPassword()
+const userRepository = new PrismaUserRepository()
+const stationRepository = new PrismaStationRepository()
+const positionRepository = new PrismaPositionRepository()
+const passwordUtils = new PasswordUtils()
 
-export const createUserUseCase = new CreateUserUseCase(inMemoryUserDatabase, hashPassword, inMemoryStationRepository, positionRepository)
+export const createUserUseCase = new CreateUserUseCase(userRepository, passwordUtils, stationRepository, positionRepository)
 
 const createUserController = new CreateUserController(createUserUseCase)
 

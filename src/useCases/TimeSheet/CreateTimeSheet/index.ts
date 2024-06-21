@@ -1,14 +1,15 @@
-import { InMemoryStationDatabase } from "../../../repositories/implementations/inMemoryStationDatabase";
-import { InMemoryTimeSheetRepository } from "../../../repositories/implementations/inMemoryTimeSheetRepository";
-import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
+
+import { PrismaStationRepository } from "../../../repositories/prismaImplementation/prismaStationRepository";
+import { PrismaTimeSheetRepository } from "../../../repositories/prismaImplementation/prismaTimeSheetRepository";
+import { PrismaUserRepository } from "../../../repositories/prismaImplementation/prismaUserRepository";
 import { CoordUtils } from "../../../utils/coord/implementation/coordUtils";
 import { CreateTimeSheetController } from "./CreateTimeSheetController";
 import { CreateTimeSheetUseCase } from "./CreateTimeSheetUseCase";
 
 
-const timeSheetRepository = new InMemoryTimeSheetRepository()
-const userRepository = new InMemoryUserDatabase()
-const stationRepository = new InMemoryStationDatabase()
+const timeSheetRepository = new PrismaTimeSheetRepository()
+const userRepository = new PrismaUserRepository()
+const stationRepository = new PrismaStationRepository()
 
 const coordUtils = new CoordUtils()
 

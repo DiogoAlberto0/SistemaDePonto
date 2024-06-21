@@ -23,7 +23,7 @@ export class GetAllUsersUseCase {
         if(position.props.privillegeLevel > 2) {
             users = await this.userRepository.getAll()
         } else {
-            users = this.userRepository.getAllByStationId(user.props.stationId)
+            users = await this.userRepository.getAllByStationId(user.props.stationId)
         }
 
 

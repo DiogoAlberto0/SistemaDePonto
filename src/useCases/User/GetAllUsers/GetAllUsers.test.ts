@@ -1,7 +1,7 @@
 import { it, expect, describe } from "vitest";
 
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
-const hashPasswordUtils = new HashPassword()
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
+const passwordUtilsUtils = new PasswordUtils()
 
 import { InMemoryStationDatabase } from "../../../repositories/implementations/inMemoryStationDatabase";
 import { CreateStationUseCase } from "../../Station/CreateStation/CreateStationUseCase";
@@ -18,7 +18,7 @@ const createPositionUseCase = new CreatePositionUseCase(positionRepository)
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { CreateUserUseCase } from "../CreateUser/CreateUserUseCase";
 const userRepository = new InMemoryUserDatabase()
-const createUserUseCase = new CreateUserUseCase(userRepository, hashPasswordUtils, stationRepository, positionRepository)
+const createUserUseCase = new CreateUserUseCase(userRepository, passwordUtilsUtils, stationRepository, positionRepository)
 
 
 import { GetAllUsersUseCase } from "./GetAllUsersUseCase";

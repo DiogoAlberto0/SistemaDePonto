@@ -3,9 +3,9 @@ import { Entity } from "./general/Entity";
 
 interface ITimeSheetProps {
     userId: string;
-    registerDay: number;
-    registerMonth: number;
-    registerYear: number;
+    registeredDay: number;
+    registeredMonth: number;
+    registeredYear: number;
     clockin: {
         first_entrance?: number | undefined;
         first_exit?: number | undefined;
@@ -22,9 +22,9 @@ export class TimeSheet extends Entity<ITimeSheetProps> {
         super(props, id)
         this.props = {
             userId: props.userId,
-            registerDay: props.registerDay,
-            registerMonth: props.registerMonth,
-            registerYear: props.registerYear,
+            registeredDay: props.registeredDay,
+            registeredMonth: props.registeredMonth,
+            registeredYear: props.registeredYear,
             clockin: {
                 first_entrance: props.clockin.first_entrance || undefined,
                 first_exit: props.clockin.first_exit || undefined,

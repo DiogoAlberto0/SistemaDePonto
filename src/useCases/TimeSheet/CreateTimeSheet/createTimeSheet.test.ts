@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { CoordUtils } from '../../../utils/coord/implementation/coordUtils'
-import { HashPassword } from '../../../utils/hash/implementation/hashPassword.utils'
+import { PasswordUtils } from '../../../utils/password/implementation/password.utils'
 
 //STATION
 import { CnpjUtils } from '../../../utils/cnpj/implementation/CnpjUtils'
@@ -19,7 +19,7 @@ const createPositionUseCase = new CreatePositionUseCase(positionRepository)
 import { InMemoryUserDatabase } from '../../../repositories/implementations/inMemoryUserDatabase'
 import { CreateUserUseCase } from '../../User/CreateUser/CreateUserUseCase'
 const userRepository = new InMemoryUserDatabase()
-const createUserUseCase = new CreateUserUseCase(userRepository, new HashPassword(), stationRepository, positionRepository)
+const createUserUseCase = new CreateUserUseCase(userRepository, new PasswordUtils(), stationRepository, positionRepository)
 
 //TIMESHEET
 import { TimeSheet } from '../../../entities/TimeSheet'

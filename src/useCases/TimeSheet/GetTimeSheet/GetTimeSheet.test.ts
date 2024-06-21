@@ -18,10 +18,10 @@ const createStationUseCase = new CreateStationUseCase(stationRepository, new Cnp
 //user
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { CreateUserUseCase } from "../../User/CreateUser/CreateUserUseCase";
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
 const userRepository = new InMemoryUserDatabase()
-const hashPasswordUtils = new HashPassword()
-const createUserUseCase = new CreateUserUseCase(userRepository, hashPasswordUtils, stationRepository, positionRepository) 
+const passwordUtilsUtils = new PasswordUtils()
+const createUserUseCase = new CreateUserUseCase(userRepository, passwordUtilsUtils, stationRepository, positionRepository) 
 
 //timeSheet
 import { InMemoryTimeSheetRepository } from "../../../repositories/implementations/inMemoryTimeSheetRepository";

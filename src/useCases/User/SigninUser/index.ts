@@ -1,17 +1,17 @@
-import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { SigninUserController } from "./SigninUserController";
 import { SigninUserUseCase } from "./SigninUserUseCase";
 
-import { HashPassword } from "../../../utils/hash/implementation/hashPassword.utils";
+import { PasswordUtils } from "../../../utils/password/implementation/password.utils";
 import { TokenUtils } from "../../../utils/jwt/implementation/token.utils";
+import { PrismaUserRepository } from "../../../repositories/prismaImplementation/prismaUserRepository";
 
-const inMemoryUserDatabase = new InMemoryUserDatabase()
+const userRepository = new PrismaUserRepository()
 
 
-const hashPassword = new HashPassword()
+const passwordUtils = new PasswordUtils()
 const tokenUtils = new TokenUtils()
 
-export const signinUserUseCase = new SigninUserUseCase(inMemoryUserDatabase, hashPassword, tokenUtils)
+const signinUserUseCase = new SigninUserUseCase(userRepository, passwordUtils, tokenUtils)
 
 const signinUserController = new SigninUserController(signinUserUseCase)
 

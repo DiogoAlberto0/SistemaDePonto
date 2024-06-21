@@ -21,11 +21,11 @@ export class InMemoryPositionRepository implements IPositionRepository {
 
         return position || null
     }
-    async update(id: string, privilegeLevel: number): Promise<Position | null> {
+    async update(id: string, privillegeLevel: number): Promise<Position | null> {
         const positionIndex = this.positions.findIndex(position => position.id === id)
         if(positionIndex < 0) throw Error('Cargo não encontrado')
 
-        this.positions[positionIndex].props.privillegeLevel = privilegeLevel
+        this.positions[positionIndex].props.privillegeLevel = privillegeLevel
         return this.positions[positionIndex]
     }
 

@@ -5,5 +5,5 @@ export interface IPositionRepository {
     getByOffice(office: string): Promise<Position | null>;
     getById(id:string): Promise<Position | null>;
     getAll(): Promise<Position[]>
-    update(id: string, privilegeLevel: number): Promise<Position | null>;
+    update(id: string, privillegeLevel: number): Promise<Position | null>;
 }

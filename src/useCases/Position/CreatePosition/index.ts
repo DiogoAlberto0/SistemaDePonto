@@ -1,9 +1,9 @@
-import { InMemoryPositionRepository } from "../../../repositories/implementations/inMemoryPositionRepository";
+import { PrismaPositionRepository } from "../../../repositories/prismaImplementation/prismaPositionRepository";
 import { CreatePositionController } from "./CreatePositionController";
 import { CreatePositionUseCase } from "./CreatePositionUseCase";
 
 
-const positionRepository = new InMemoryPositionRepository()
+const positionRepository = new PrismaPositionRepository()
 
 const createPositionUseCase = new CreatePositionUseCase(positionRepository)
 

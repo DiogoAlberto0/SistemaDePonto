@@ -21,9 +21,9 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         const existentTimeSheet = this.timeSheets.find(timeSheet => {
             if(
                 timeSheet.props.userId === userId &&
-                timeSheet.props.registerDay == date.getDate() &&
-                timeSheet.props.registerMonth == date.getMonth() &&
-                timeSheet.props.registerYear == date.getFullYear() 
+                timeSheet.props.registeredDay == date.getDate() &&
+                timeSheet.props.registeredMonth == date.getMonth() &&
+                timeSheet.props.registeredYear == date.getFullYear() 
             ) return true
         })
 
@@ -51,18 +51,18 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         const existentTimeSheetIndex = this.timeSheets.findIndex(timeSheet => {
             if(
                 timeSheet.props.userId === userId &&
-                timeSheet.props.registerDay == date.getDate() &&
-                timeSheet.props.registerMonth == date.getMonth() &&
-                timeSheet.props.registerYear == date.getFullYear() 
+                timeSheet.props.registeredDay == date.getDate() &&
+                timeSheet.props.registeredMonth == date.getMonth() &&
+                timeSheet.props.registeredYear == date.getFullYear() 
             ) return true
         })
 
         if(existentTimeSheetIndex < 0) {
             const timeSheet = new TimeSheet({
                 userId,
-                registerDay: date.getDate(),
-                registerMonth: date.getMonth(),
-                registerYear: date.getFullYear(),
+                registeredDay: date.getDate(),
+                registeredMonth: date.getMonth(),
+                registeredYear: date.getFullYear(),
                 clockin: {
                     missed: true
                 }
@@ -86,16 +86,16 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         const existentTimeSheetIndex = this.timeSheets.findIndex(timeSheet => {
             if(
                 timeSheet.props.userId === userId &&
-                timeSheet.props.registerDay == date.getDate() &&
-                timeSheet.props.registerMonth == date.getMonth() &&
-                timeSheet.props.registerYear == date.getFullYear() 
+                timeSheet.props.registeredDay == date.getDate() &&
+                timeSheet.props.registeredMonth == date.getMonth() &&
+                timeSheet.props.registeredYear == date.getFullYear() 
             ) return true
         })
         const timeSheet = new TimeSheet({
             userId,
-            registerDay: date.getDate(),
-            registerMonth: date.getMonth(),
-            registerYear: date.getFullYear(),
+            registeredDay: date.getDate(),
+            registeredMonth: date.getMonth(),
+            registeredYear: date.getFullYear(),
             clockin: {
                 first_entrance,
                 first_exit,
@@ -116,7 +116,7 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
     }
 
     async getByUserIdAndYearAndMonth(userId: string, year: number, month: number): Promise<TimeSheet[]> {
-        return this.timeSheets.filter(timeSheet => timeSheet.props.userId === userId && timeSheet.props.registerYear == year && timeSheet.props.registerMonth == month  )
+        return this.timeSheets.filter(timeSheet => timeSheet.props.userId === userId && timeSheet.props.registeredYear == year && timeSheet.props.registeredMonth == month  )
     }
 
     
@@ -127,8 +127,8 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         this.timeSheets.forEach(timeSheet => {
             if(timeSheet.props.userId === userId) {
                 const monthAndYear = {
-                    year: timeSheet.props.registerYear,
-                    month: timeSheet.props.registerMonth
+                    year: timeSheet.props.registeredYear,
+                    month: timeSheet.props.registeredMonth
                 }
 
                 const exists = monthsAndYears.some(item => {

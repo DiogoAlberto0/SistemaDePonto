@@ -29,8 +29,8 @@ export class SetMedicalCertificateController {
             await this.setMedicalCertificateUseCase.execute({
                 adminId,
                 userId,
-                startsAt,
-                endsAt
+                startsAt: new Date(startsAt),
+                endsAt: new Date(endsAt)
             })
 
             return response.status(200).send({

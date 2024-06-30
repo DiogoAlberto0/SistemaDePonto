@@ -98,7 +98,7 @@ describe('set misset to timesheet tests', async () => {
                 adminId: funcionarioUser.id,
                 userId: funcionarioUserFromAnotherStation.id,
                 startsAt: new Date(),
-                endsAt: new Date(new Date().getDate() + 7)
+                endsAt: new Date(new Date().getUTCDate() + 7)
             })
         ).rejects.toBeInstanceOf(ApiError)
     })
@@ -109,7 +109,7 @@ describe('set misset to timesheet tests', async () => {
                 adminId: encarregadoUser.id,
                 userId: funcionarioUserFromAnotherStation.id,
                 startsAt: new Date(),
-                endsAt: new Date(new Date().getDate() + 7)
+                endsAt: new Date(new Date().getUTCDate() + 7)
             })
         ).rejects.toBeInstanceOf(ApiError)
     })
@@ -120,7 +120,7 @@ describe('set misset to timesheet tests', async () => {
             adminId: encarregadoUser.id,
             userId: funcionarioUser.id,
             startsAt: new Date(),
-            endsAt: new Date(new Date().getDate() + 7)
+            endsAt: new Date(new Date().getUTCDate() + 7)
         })
         expect(result).toBeInstanceOf(Array)
 
@@ -133,7 +133,7 @@ describe('set misset to timesheet tests', async () => {
             adminId: encarregadoUser.id,
             userId: funcionarioUser.id,
             startsAt: new Date(),
-            endsAt: new Date(new Date().getDate() + 7)
+            endsAt: new Date(new Date().getUTCDate() + 7)
         })
         expect(result).toBeInstanceOf(Array)
 
@@ -143,7 +143,7 @@ describe('set misset to timesheet tests', async () => {
             adminId: gerenteUser.id,
             userId: funcionarioUserFromAnotherStation.id,
             startsAt: new Date(),
-            endsAt: new Date(new Date().getDate() + 7)
+            endsAt: new Date(new Date().getUTCDate() + 7)
         })
         expect(result2).toBeInstanceOf(Array)
 

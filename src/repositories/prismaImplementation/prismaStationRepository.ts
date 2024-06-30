@@ -1,4 +1,5 @@
 import { Station } from "../../entities/Station";
+import { User } from "../../entities/User";
 import { IStationRepository } from "../IStationRepository";
 import { prisma } from "./prismaConnection";
 
@@ -19,7 +20,7 @@ export class PrismaStationRepository implements IStationRepository {
                         latitude: station.latitude,
                         longitude: station.longitude
                     }
-                })
+                }, station.id)
             ))
         } catch (error: any) {
             throw new Error('Internal server error');
@@ -42,7 +43,7 @@ export class PrismaStationRepository implements IStationRepository {
                     latitude: station.latitude,
                     longitude: station.longitude
                 }
-            })
+            }, station.id)
         } catch (error: any) {
             throw new Error(error.message || 'Internal server error');
 
@@ -64,7 +65,7 @@ export class PrismaStationRepository implements IStationRepository {
                     latitude: station.latitude,
                     longitude: station.longitude
                 }
-            })
+            }, station.id)
         } catch (error: any) {
             throw new Error(error.message || 'Internal server error');
 
@@ -88,7 +89,7 @@ export class PrismaStationRepository implements IStationRepository {
                     longitude: position.longitude
                 }
 
-            })
+            }, position.id)
         } catch (error: any) {
             throw new Error(error.message || 'Internal server error');
 
@@ -107,7 +108,33 @@ export class PrismaStationRepository implements IStationRepository {
             })
         } catch (error: any) {
             throw new Error(error.message || 'Internal server error');
+        }
+    }
 
+    async updateById({ id, props: { name, cnpj, coord: { latitude, longitude }}}: Station): Promise<Station> {
+        try {
+            const updatedStation = await prisma.station.update({
+                where: {
+                    id
+                },
+                data: {
+                    name,
+                    cnpj,
+                    latitude,
+                    longitude
+                }
+            })
+
+            return new Station({
+                name: updatedStation.name,
+                cnpj: updatedStation.cnpj,
+                coord: {
+                    latitude: updatedStation.latitude,
+                    longitude: updatedStation.longitude
+                }
+            }, updatedStation.id)
+        } catch (error:any) {
+            throw new Error(error.message || 'Internal server error');
         }
     }
 }

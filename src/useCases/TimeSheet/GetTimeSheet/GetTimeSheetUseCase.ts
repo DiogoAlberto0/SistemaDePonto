@@ -34,6 +34,7 @@ export class GetTimeSheetUseCase {
             if (user.props.stationId != admin.props.stationId) throw new ApiError(401, 'Usuário não autorizado')
 
             timeSheet = await this.timeSheetRepository.getByUserIdAndYearAndMonth(user.id, data.year, data.month)
+            
         } else {
             timeSheet = await this.timeSheetRepository.getByUserIdAndYearAndMonth(user.id, data.year, data.month)
         }

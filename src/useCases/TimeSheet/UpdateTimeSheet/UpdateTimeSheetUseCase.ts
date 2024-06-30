@@ -30,7 +30,9 @@ export class UpdateTimeSheetuseCase {
 
         return await this.timeSheetRepository.UpdateTimeSheetByUserId({
             userId: user.id,
-            date: data.date,
+            registeredDay: data.registeredDay,
+            registeredMonth: data.registeredMonth,
+            registeredYear: data.registeredYear,
             first_entrance: data.first_entrance,
             second_entrance: data.second_entrance,
             first_exit: data.first_exit,

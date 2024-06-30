@@ -19,15 +19,22 @@ export class CreateTimeSheetController {
         })
 
         const { latitude, longitude } = request.body
+
+        const latitudeNumber = parseFloat(latitude)
+        const longitudeNumber = parseFloat(longitude)
+
         if(!latitude || !longitude) return response.status(400).send({
-            message: 'Não foi possivel localizar o dispositivo'
+            message: 'Informar latitude e longitude'
         })
 
+        if(isNaN(latitudeNumber) || isNaN(longitudeNumber)) return response.status(400).send({
+            message: 'coordenadas inválidas'
+        })
         try {
             await this.createTimeSheetUseCase.execute({
                 userId,
-                latitude,
-                longitude,
+                latitude: latitudeNumber,
+                longitude: longitudeNumber,
                 createdAt: new Date()
             })
 
@@ -35,7 +42,7 @@ export class CreateTimeSheetController {
                 message: 'Registro efetuado!'
             })
         } catch (error: any) {
-            return response.status(400).send({
+            return response.status(error.status || 500).send({
                 message: error.message || 'Ocorreu um erro inesperado'
             })
         }

@@ -31,12 +31,14 @@ export class SetMedicalCertificateUseCase {
 
         const medicalCertificatedDates = this.dateUtils.getArrayDatesBetwen(data.startsAt, data.endsAt)
 
-        
-        const promises = medicalCertificatedDates.map(date => {
-            this.timeSheetRepository.UpdateTimeSheetByUserId({
-                date,
+        const promises = medicalCertificatedDates.map(async date => {
+            await this.timeSheetRepository.UpdateTimeSheetByUserId({
+                registeredDay: date.getUTCDate(),
+                registeredMonth: date.getUTCMonth(),
+                registeredYear: date.getUTCFullYear(),
                 userId: user.id,
-                medicalCertificate: true
+                medicalCertificate: true,
+                missed: false
             })
         })
 

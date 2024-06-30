@@ -8,13 +8,11 @@ export class PrismaPositionRepository implements IPositionRepository {
     async getAll(): Promise<Position[]> {
         try {
             const response = await prisma.position.findMany()
-    
-            const positions = response.map(position => new Position({ office: position.office, privillegeLevel: position.privillegeLevel}, position.id))
-    
-            return positions
-            
+
+            return response.map(position => new Position({ office: position.office, privillegeLevel: position.privillegeLevel }, position.id))
+
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
     }
     async getById(id: string): Promise<Position | null> {
@@ -24,15 +22,15 @@ export class PrismaPositionRepository implements IPositionRepository {
                     id
                 }
             })
-    
-            if(!position) {
+
+            if (!position) {
                 return null
             }
-            
-            return new Position({ office: position.office, privillegeLevel: position.privillegeLevel}, position.id)
-            
+
+            return new Position({ office: position.office, privillegeLevel: position.privillegeLevel }, position.id)
+
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
     }
     async getByOffice(office: string): Promise<Position | null> {
@@ -42,17 +40,17 @@ export class PrismaPositionRepository implements IPositionRepository {
                     office
                 }
             })
-    
-            if(!position) {
+
+            if (!position) {
                 return null
             }
-            
-            return new Position({ office: position.office, privillegeLevel: position.privillegeLevel}, position.id)
-            
+
+            return new Position({ office: position.office, privillegeLevel: position.privillegeLevel }, position.id)
+
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
-    
+
     }
     async save(position: Position): Promise<Position> {
         try {
@@ -65,7 +63,7 @@ export class PrismaPositionRepository implements IPositionRepository {
             })
             return position
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
     }
     async update(id: string, privillegeLevel: number): Promise<Position | null> {
@@ -79,9 +77,9 @@ export class PrismaPositionRepository implements IPositionRepository {
                 }
             })
 
-            return new Position({ office: position.office, privillegeLevel: position.privillegeLevel}, position.id)
+            return new Position({ office: position.office, privillegeLevel: position.privillegeLevel }, position.id)
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
     }
 }

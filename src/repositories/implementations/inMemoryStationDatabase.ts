@@ -5,7 +5,7 @@ import { IStationRepository } from "../IStationRepository";
 
 export class InMemoryStationDatabase implements IStationRepository {
 
-    private stations: Station[] = []
+    stations: Station[] = []
 
     async getByName(name: string): Promise<Station | null> {
         const station = this.stations.find(station => station.props.name === name)
@@ -27,5 +27,15 @@ export class InMemoryStationDatabase implements IStationRepository {
 
     async getAll(): Promise<Station[]> {
         return this.stations
+    }
+
+    async updateById(stationToUpdate: Station): Promise<Station> {
+        const stationIndex = this.stations.findIndex(station => station.id === stationToUpdate.id)
+
+        if(stationIndex < 0) throw new Error('Posto não encontrado')
+
+        this.stations[stationIndex] = stationToUpdate
+
+        return stationToUpdate
     }
 }

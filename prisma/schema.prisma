@@ -49,10 +49,10 @@ model TimeSheet {
   registeredMonth Int
   registeredYear  Int
 
-  first_entrance Int?
-  first_exit Int?
-  second_entrance Int?
-  second_exit Int?
+  first_entrance BigInt?
+  first_exit BigInt?
+  second_entrance BigInt?
+  second_exit BigInt?
   missed Boolean @default(false)
   medicalCertificate Boolean @default(false)
 

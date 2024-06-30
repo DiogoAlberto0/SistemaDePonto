@@ -10,12 +10,16 @@ export class CreateStationController {
     ) { }
 
 
-    async handle(request: Request, respose: Response) {
+    async handle(request: Request, response: Response) {
 
         const { name, latitude, longitude, cnpj } = request.body
 
-        if (!name || !latitude || !longitude) return respose.status(400).send({
-            message: 'Informe o nome a latitude e a longitude do posto'
+        if (!name || !latitude || !longitude || !cnpj) return response.status(400).send({
+            message: 'Informe o nome, latitude, longitude e CNPJ do posto'
+        })
+
+        if(isNaN(parseFloat(latitude)) || isNaN(parseFloat(longitude))) return response.status(400).send({
+            message: 'coordenadas inválidas'
         })
 
         try {
@@ -28,11 +32,11 @@ export class CreateStationController {
                 }
             })
 
-            return respose.status(201).send({
+            return response.status(201).send({
                 message: 'Posto criado com sucesso'
             })
         } catch (error: any) {
-            return respose.status(500).send({
+            return response.status(500).send({
                 message: error.message || 'Unexpecter error'
             })
         }

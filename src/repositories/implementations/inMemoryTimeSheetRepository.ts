@@ -21,9 +21,9 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         const existentTimeSheet = this.timeSheets.find(timeSheet => {
             if(
                 timeSheet.props.userId === userId &&
-                timeSheet.props.registeredDay == date.getDate() &&
-                timeSheet.props.registeredMonth == date.getMonth() &&
-                timeSheet.props.registeredYear == date.getFullYear() 
+                timeSheet.props.registeredDay == date.getUTCDate() &&
+                timeSheet.props.registeredMonth == date.getUTCMonth() &&
+                timeSheet.props.registeredYear == date.getUTCFullYear() 
             ) return true
         })
 
@@ -36,13 +36,13 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         if(timeSheetIndex < 0) throw new Error('Registro de folha de ponto não encontrado')
 
         if(this.timeSheets[timeSheetIndex].props.clockin.second_entrance) {
-            this.timeSheets[timeSheetIndex].props.clockin.second_exit = date.getTime()
+            this.timeSheets[timeSheetIndex].props.clockin.second_exit = BigInt(date.getTime())
         }
         if(this.timeSheets[timeSheetIndex].props.clockin.first_exit) {
-            this.timeSheets[timeSheetIndex].props.clockin.second_entrance = date.getTime()
+            this.timeSheets[timeSheetIndex].props.clockin.second_entrance = BigInt(date.getTime())
         }
 
-        this.timeSheets[timeSheetIndex].props.clockin.first_exit = date.getTime()
+        this.timeSheets[timeSheetIndex].props.clockin.first_exit = BigInt(date.getTime())
 
         return this.timeSheets[timeSheetIndex]
     }
@@ -51,18 +51,18 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         const existentTimeSheetIndex = this.timeSheets.findIndex(timeSheet => {
             if(
                 timeSheet.props.userId === userId &&
-                timeSheet.props.registeredDay == date.getDate() &&
-                timeSheet.props.registeredMonth == date.getMonth() &&
-                timeSheet.props.registeredYear == date.getFullYear() 
+                timeSheet.props.registeredDay == date.getUTCDate() &&
+                timeSheet.props.registeredMonth == date.getUTCMonth() &&
+                timeSheet.props.registeredYear == date.getUTCFullYear() 
             ) return true
         })
 
         if(existentTimeSheetIndex < 0) {
             const timeSheet = new TimeSheet({
                 userId,
-                registeredDay: date.getDate(),
-                registeredMonth: date.getMonth(),
-                registeredYear: date.getFullYear(),
+                registeredDay: date.getUTCDate(),
+                registeredMonth: date.getUTCMonth(),
+                registeredYear: date.getUTCFullYear(),
                 clockin: {
                     missed: true
                 }
@@ -75,7 +75,9 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
     }
     async UpdateTimeSheetByUserId({
         userId,
-        date,
+        registeredDay,
+        registeredMonth,
+        registeredYear,
         first_entrance,
         first_exit,
         second_entrance,
@@ -86,16 +88,16 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
         const existentTimeSheetIndex = this.timeSheets.findIndex(timeSheet => {
             if(
                 timeSheet.props.userId === userId &&
-                timeSheet.props.registeredDay == date.getDate() &&
-                timeSheet.props.registeredMonth == date.getMonth() &&
-                timeSheet.props.registeredYear == date.getFullYear() 
+                timeSheet.props.registeredDay == registeredDay &&
+                timeSheet.props.registeredMonth == registeredMonth &&
+                timeSheet.props.registeredYear == registeredYear 
             ) return true
         })
         const timeSheet = new TimeSheet({
             userId,
-            registeredDay: date.getDate(),
-            registeredMonth: date.getMonth(),
-            registeredYear: date.getFullYear(),
+            registeredDay: registeredDay,
+            registeredMonth: registeredMonth,
+            registeredYear: registeredYear,
             clockin: {
                 first_entrance,
                 first_exit,
@@ -140,5 +142,10 @@ export class InMemoryTimeSheetRepository implements ITimeSheetRepository{
             }
         })
         return monthsAndYears
+    }
+
+    async getLastRegisterByDate({userId, year, month, day}: {userId: string, year: number, month: number, day: number}): Promise<TimeSheet | null> {
+        const filteredTimeSheets = this.timeSheets.filter(timeSheet => timeSheet.props.userId === userId && timeSheet.props.registeredDay === day && timeSheet.props.registeredMonth === month && timeSheet.props.registeredYear === year)
+        return filteredTimeSheets[0] || null
     }
 }

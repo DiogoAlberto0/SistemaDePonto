@@ -15,7 +15,7 @@ export class CreateUserController {
         const { name, phone, password, positionId, stationId } = request.body
 
         if (!name || !phone || !password || !positionId || !stationId ) return response.status(400).send({
-            message: 'Informe todos os dados necessários.'
+            message: 'Informe o nome, telefone, senha, cargo e posto do funcionario'
         })
 
         try {

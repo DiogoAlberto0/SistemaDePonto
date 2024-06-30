@@ -2,10 +2,12 @@
 export interface UpdateTimeSheetDTO {
     userId: string;
     adminId: string;
-    date: Date;
-    first_entrance?: number;
-    first_exit?: number;
-    second_entrance?: number;
-    second_exit?: number;
+    registeredDay: number;
+    registeredMonth: number;
+    registeredYear: number;
+    first_entrance?: bigint;
+    first_exit?: bigint;
+    second_entrance?: bigint;
+    second_exit?: bigint;
     missed?: boolean
 }

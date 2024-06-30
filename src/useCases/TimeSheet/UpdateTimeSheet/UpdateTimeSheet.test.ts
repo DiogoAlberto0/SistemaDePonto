@@ -19,14 +19,14 @@ const createStationUseCase = new CreateStationUseCase(stationRepository, new Cnp
 import { InMemoryUserDatabase } from "../../../repositories/implementations/inMemoryUserDatabase";
 import { CreateUserUseCase } from "../../User/CreateUser/CreateUserUseCase";
 const userRepository = new InMemoryUserDatabase()
-const createUserUseCase = new CreateUserUseCase(userRepository,new PasswordUtils(),stationRepository, positionRepository)
+const createUserUseCase = new CreateUserUseCase(userRepository, new PasswordUtils(), stationRepository, positionRepository)
 
 //TIMESHEET
 import { TimeSheet } from "../../../entities/TimeSheet";
 import { InMemoryTimeSheetRepository } from "../../../repositories/implementations/inMemoryTimeSheetRepository";
 import { UpdateTimeSheetuseCase } from "./UpdateTimeSheetUseCase";
 const timeSheetRepository = new InMemoryTimeSheetRepository()
-const updateTimeSheetUseCase = new UpdateTimeSheetuseCase(timeSheetRepository,userRepository, positionRepository)
+const updateTimeSheetUseCase = new UpdateTimeSheetuseCase(timeSheetRepository, userRepository, positionRepository)
 
 describe('set misset to timesheet tests', async () => {
 
@@ -90,58 +90,75 @@ describe('set misset to timesheet tests', async () => {
     })
 
     it('should not be able an funcionario set missed to any another funcionario', () => {
+        const date = new Date()
         expect(updateTimeSheetUseCase.execute({
             adminId: funcionarioUser.id,
-            date: new Date(),
+            registeredDay: date.getUTCDate(),
+            registeredMonth: date.getUTCMonth(),
+            registeredYear: date.getUTCFullYear(),
             userId: funcionarioUserFromAnotherStation.id
         })).rejects.toThrow(ApiError)
     })
 
     it('should not be able an encarregado set missed to funcionario from another station', () => {
+        const date = new Date()
         expect(updateTimeSheetUseCase.execute({
             adminId: encarregadoUser.id,
-            date: new Date(),    
+            registeredDay: date.getUTCDate(),
+            registeredMonth: date.getUTCMonth(),
+            registeredYear: date.getUTCFullYear(),
             userId: funcionarioUserFromAnotherStation.id
         })).rejects.toThrow(ApiError)
     })
 
     it('should be able an encarregado set missed to funcionario from the same station', () => {
+        const date = new Date()
         expect(updateTimeSheetUseCase.execute({
             adminId: encarregadoUser.id,
-            date: new Date(),
+            registeredDay: date.getUTCDate(),
+            registeredMonth: date.getUTCMonth(),
+            registeredYear: date.getUTCFullYear(),
             userId: funcionarioUser.id,
             missed: true
         })).resolves.toBeInstanceOf(TimeSheet)
     })
 
     it('should be able an encarregado alter funcionario time sheet from the same station', () => {
+        const date = new Date()
         expect(updateTimeSheetUseCase.execute({
             adminId: encarregadoUser.id,
-            date: new Date(),
+            registeredDay: date.getUTCDate(),
+            registeredMonth: date.getUTCMonth(),
+            registeredYear: date.getUTCFullYear(), 
             userId: funcionarioUser.id,
             missed: false,
-            first_entrance: new Date().getTime() - 50000,
-            first_exit: new Date().getTime() - 40000,
-            second_entrance: new Date().getTime() - 30000,
-            second_exit: new Date().getTime() - 20000
+            first_entrance: BigInt(new Date().getTime() - 50000),
+            first_exit: BigInt(new Date().getTime() - 40000),
+            second_entrance: BigInt(new Date().getTime() - 30000),
+            second_exit: BigInt(new Date().getTime() - 20000)
         })).resolves.toBeInstanceOf(TimeSheet)
     })
 
     it('should be possible to an gerente set misset to any funcionário', () => {
+        const date = new Date()
         expect(updateTimeSheetUseCase.execute({
             adminId: gerenteUser.id,
-            date: new Date(),
+            registeredDay: date.getUTCDate(),
+            registeredMonth: date.getUTCMonth(),
+            registeredYear: date.getUTCFullYear(),
             userId: funcionarioUserFromAnotherStation.id,
             missed: true
         })).resolves.toBeInstanceOf(TimeSheet)
         expect(updateTimeSheetUseCase.execute({
             adminId: gerenteUser.id,
-            date: new Date(),
+            registeredDay: date.getUTCDate(),
+            registeredMonth: date.getUTCMonth(),
+            registeredYear: date.getUTCFullYear(),
             userId: funcionarioUser.id,
             missed: true
         })).resolves.toBeInstanceOf(TimeSheet)
     })
 
-    
+
 
 })

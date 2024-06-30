@@ -12,7 +12,7 @@ export class GetAllPositionsController {
     async handle(request: Request, response: Response) {
 
         try {
-            const positions = this.getAllPositionsUseCase.execute()
+            const positions = await this.getAllPositionsUseCase.execute()
             return response.status(200).send({
                 positions
             })

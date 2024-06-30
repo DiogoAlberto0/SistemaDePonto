@@ -1,22 +1,28 @@
 import { Router } from "express";
 
 //controllers
-import { createStationController } from "../useCases/Station/CreateStation";
 import { validateUserController } from "../useCases/User/ValidateUser";
 import { updatePositionContoller } from "../useCases/Position/UpdatePosition";
 import { getAllPositionsController } from "../useCases/Position/GetAllPositions";
+import { createPositionContoller } from "../useCases/Position/CreatePosition";
+import { getPrivillegeLevelController } from "../useCases/Position/GetPrivillegeLevel";
 
 
 const positionRoutes = Router()
 
-positionRoutes.get('/station',
+positionRoutes.get('/position',
     (request, response, next) => validateUserController.handle(request, response, next, 3),
     (request, response) => getAllPositionsController.handle(request, response)
 )
 
-positionRoutes.post('/station',
+positionRoutes.get('/position/privillegeLevel',
+    (request, response, next) => validateUserController.handle(request, response, next, 0),
+    (request, response) => getPrivillegeLevelController.handle(request, response)
+)
+
+positionRoutes.post('/position',
     (request, response, next) => validateUserController.handle(request, response, next, 3),
-    (request, response) => createStationController.handle(request, response)
+    (request, response) => createPositionContoller.handle(request, response)
 )
 
 positionRoutes.put('/position/:id',

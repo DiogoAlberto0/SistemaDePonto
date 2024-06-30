@@ -5,74 +5,94 @@ import { prisma } from "./prismaConnection";
 
 
 export class PrismaTimeSheetRepository implements ITimeSheetRepository {
+
     async UpdateTimeSheetByUserId(data: IUpdateTimeSheet): Promise<TimeSheet> {
         try {
+            const { registeredDay, registeredMonth, registeredYear, userId, first_entrance, first_exit, second_entrance, second_exit, missed, medicalCertificate } = data;
+
+            // Buscar folha de ponto existente
             const existentTimeSheet = await prisma.timeSheet.findFirst({
                 where: {
-                    registeredDay: data.date.getDate(),
-                    registeredMonth: data.date.getMonth(),
-                    registeredYear: data.date.getFullYear(),
-                    userId: data.userId
+                    registeredDay,
+                    registeredMonth,
+                    registeredYear,
+                    userId: userId
                 }
-            })
+            });
+
+            // Dados para atualização ou criação
+            const timeSheetData = {
+                userId: userId,
+                registeredDay,
+                registeredMonth,
+                registeredYear,
+                first_entrance: first_entrance,
+                first_exit: first_exit,
+                second_entrance: second_entrance,
+                second_exit: second_exit,
+                missed: missed || false,
+                medicalCertificate: medicalCertificate || false,
+            };
+
+            let timeSheet: TimeSheet;
 
             if (!existentTimeSheet) {
-                const timeSheet = new TimeSheet({
-                    userId: data.userId,
-                    registeredDay: data.date.getDate(),
-                    registeredMonth: data.date.getMonth(),
-                    registeredYear: data.date.getFullYear(),
+                // Criação de nova folha de ponto
+                const createdTimeSheet = await prisma.timeSheet.create({ data: timeSheetData });
+                timeSheet = new TimeSheet({
+                    userId: createdTimeSheet.userId,
+                    registeredDay: createdTimeSheet.registeredDay,
+                    registeredMonth: createdTimeSheet.registeredMonth,
+                    registeredYear: createdTimeSheet.registeredYear,
                     clockin: {
-                        first_entrance: data.first_entrance,
-                        second_entrance: data.second_entrance,
-                        first_exit: data.first_exit,
-                        second_exit: data.second_exit,
-                        missed: data.missed,
-                        medicalCertificate: data.medicalCertificate
+                        first_entrance: createdTimeSheet.first_entrance || undefined,
+                        first_exit: createdTimeSheet.first_exit || undefined,
+                        second_entrance: createdTimeSheet.second_entrance || undefined,
+                        second_exit: createdTimeSheet.second_exit || undefined,
+                        missed: createdTimeSheet.missed,
+                        medicalCertificate: createdTimeSheet.medicalCertificate
                     }
-                })
-                await this.save(timeSheet)
-                return timeSheet
+                }, createdTimeSheet.id);
             } else {
-                const timeSheet = new TimeSheet({
-                    userId: data.userId,
-                    registeredDay: data.date.getDate(),
-                    registeredMonth: data.date.getMonth(),
-                    registeredYear: data.date.getFullYear(),
+                // Atualização de folha de ponto existente
+                const updatedTimeSheet = await prisma.timeSheet.update({
+                    where: { id: existentTimeSheet.id },
+                    data: timeSheetData
+                });
+                timeSheet = new TimeSheet({
+                    userId: updatedTimeSheet.userId,
+                    registeredDay: updatedTimeSheet.registeredDay,
+                    registeredMonth: updatedTimeSheet.registeredMonth,
+                    registeredYear: updatedTimeSheet.registeredYear,
                     clockin: {
-                        first_entrance: data.first_entrance,
-                        second_entrance: data.second_entrance,
-                        first_exit: data.first_exit,
-                        second_exit: data.second_exit,
-                        missed: data.missed,
-                        medicalCertificate: data.medicalCertificate
+                        first_entrance: updatedTimeSheet.first_entrance || undefined,
+                        first_exit: updatedTimeSheet.first_exit || undefined,
+                        second_entrance: updatedTimeSheet.second_entrance || undefined,
+                        second_exit: updatedTimeSheet.second_exit || undefined,
+                        missed: updatedTimeSheet.missed,
+                        medicalCertificate: updatedTimeSheet.medicalCertificate
                     }
-                }, existentTimeSheet.id)
-
-                await prisma.timeSheet.update({
-                    where: {
-                        id: timeSheet.id
-                    },
-                    data: timeSheet.props
-                })
-
-                return timeSheet
+                }, updatedTimeSheet.id);
             }
+
+            return timeSheet;
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error');
         }
     }
+
     async getByUserIdAndDate(userId: string, date: Date): Promise<TimeSheet | null> {
         try {
 
             const timeSheet = await prisma.timeSheet.findFirst({
                 where: {
                     userId,
-                    registeredDay: date.getDate(),
-                    registeredMonth: date.getMonth(),
-                    registeredYear: date.getFullYear(),
+                    registeredDay: date.getUTCDate(),
+                    registeredMonth: date.getUTCMonth(),
+                    registeredYear: date.getUTCFullYear(),
                 }
             })
+
 
             if (!timeSheet) return null
 
@@ -89,7 +109,7 @@ export class PrismaTimeSheetRepository implements ITimeSheetRepository {
                 }
             }, timeSheet.id)
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internala server error')
         }
     }
     async getByUserIdAndYearAndMonth(userId: string, year: number, month: number): Promise<TimeSheet[]> {
@@ -99,7 +119,12 @@ export class PrismaTimeSheetRepository implements ITimeSheetRepository {
                     userId,
                     registeredYear: year,
                     registeredMonth: month
-                }
+                },
+                orderBy: [
+                    { registeredYear: 'asc' },
+                    { registeredMonth: 'asc' },
+                    { registeredDay: 'asc' },
+                ]
             })
 
             return timeSheets.map(timeSheet => (
@@ -116,10 +141,10 @@ export class PrismaTimeSheetRepository implements ITimeSheetRepository {
                         missed: timeSheet.missed,
                         medicalCertificate: timeSheet.medicalCertificate
                     }
-                })
+                }, timeSheet.id)
             ))
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
     }
     async getMonthsAndYearByUserId(userId: string): Promise<{ year: number; month: number; }[]> {
@@ -139,29 +164,26 @@ export class PrismaTimeSheetRepository implements ITimeSheetRepository {
 
             return result;
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
         }
     }
     async save(timeSheet: TimeSheet): Promise<TimeSheet> {
-        try {
-            await prisma.timeSheet.create({
-                data: {
-                    id: timeSheet.id,
-                    registeredDay: timeSheet.props.registeredDay,
-                    registeredMonth: timeSheet.props.registeredMonth,
-                    registeredYear: timeSheet.props.registeredYear,
-                    first_entrance: timeSheet.props.clockin.first_entrance,
-                    first_exit: timeSheet.props.clockin.first_exit,
-                    second_entrance: timeSheet.props.clockin.second_entrance,
-                    second_exit: timeSheet.props.clockin.second_exit,
-                    userId: timeSheet.props.userId
-                }
-            })
 
-            return timeSheet
-        } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
-        }
+        await prisma.timeSheet.create({
+            data: {
+                id: timeSheet.id,
+                registeredDay: timeSheet.props.registeredDay,
+                registeredMonth: timeSheet.props.registeredMonth,
+                registeredYear: timeSheet.props.registeredYear,
+                first_entrance: timeSheet.props.clockin.first_entrance,
+                userId: timeSheet.props.userId,
+                missed: false,
+                medicalCertificate: false
+            }
+        })
+
+        return timeSheet
+
     }
     async setClockinById(timeSheetId: string, date: Date): Promise<TimeSheet> {
         try {
@@ -198,7 +220,62 @@ export class PrismaTimeSheetRepository implements ITimeSheetRepository {
                 }
             }, updatedTimeSheet.id)
         } catch (error: any) {
-            throw new Error(error.messgae || 'Internal server error')
+            throw new Error(error.message || 'Internal server error')
+        }
+    }
+
+    async getLastRegisterByDate({userId, year, month, day}:{userId: string, year: number, month: number, day: number}): Promise<TimeSheet | null> {
+        try {
+            const lastRegister = await prisma.timeSheet.findFirst({
+                where: {
+                    userId,
+                    registeredDay: day,
+                    registeredMonth: month,
+                    registeredYear: year,
+                },
+                orderBy: [
+                    {
+                        registeredYear: 'desc' 
+                    },
+                    {
+                        registeredMonth: 'desc'
+                    },
+                    {
+                        registeredDay: 'desc'
+                    }
+                ]
+            })
+
+            if(!lastRegister) return null
+
+            const { 
+                id,
+                registeredDay,
+                registeredMonth,
+                registeredYear,
+                missed,
+                medicalCertificate,
+                first_entrance,
+                first_exit,
+                second_exit,
+                second_entrance,
+            } = lastRegister
+            return new TimeSheet({
+                registeredDay,
+                registeredMonth,
+                registeredYear,
+                userId,
+                clockin: {
+                    first_entrance: first_entrance || undefined,
+                    first_exit: first_exit || undefined,
+                    second_entrance: second_entrance || undefined,
+                    second_exit: second_exit || undefined,
+                    missed,
+                    medicalCertificate
+                }
+            }, id)
+        } catch (error: any) {
+            throw new Error(error.message || 'Internal server error')
         }
     }
 }

@@ -7,6 +7,7 @@ import { updateTimeSheetController } from "../useCases/TimeSheet/UpdateTimeSheet
 import { validateUserController } from "../useCases/User/ValidateUser";
 import { getTimeSheetController } from "../useCases/TimeSheet/GetTimeSheet";
 import { getMonthsAndYearsController } from "../useCases/TimeSheet/GetMonthsAndYears";
+import { getLastRegisterController } from "../useCases/TimeSheet/GetLastRegister";
 
 
 const timeSheetRoutes = Router()
@@ -19,6 +20,11 @@ timeSheetRoutes.get('/timeSheet/monthsAndYears',
 timeSheetRoutes.get('/timeSheet',
     (request, response, next) => validateUserController.handle(request, response, next, 1),
     (request, response) => getTimeSheetController.handle(request, response)
+)
+
+timeSheetRoutes.get('/timeSheet/lastRegister',
+    (request, response, next) => validateUserController.handle(request, response, next, 1),
+    (request, response) => getLastRegisterController.handle(request, response)
 )
 
 timeSheetRoutes.post('/timeSheet',

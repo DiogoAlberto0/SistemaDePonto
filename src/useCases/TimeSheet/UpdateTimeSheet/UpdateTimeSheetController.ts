@@ -14,7 +14,9 @@ export class UpdateTimeSheetController {
         const adminId = request.headers.userId as string
 
         const {
-            date,
+            registeredDay,
+            registeredMonth,
+            registeredYear,
             first_entrance,
             first_exit,
             second_entrance,
@@ -24,20 +26,22 @@ export class UpdateTimeSheetController {
 
         const { userId } = request.params
 
-        if (!userId || !date) return response.status(400).send({
-            message: 'Informe o funcionário e a data para alteração'
+        if (!userId || !registeredDay || !registeredMonth || !registeredYear) return response.status(400).send({
+            message: 'Informe o funcionário o dia mes e ano para alteração'
         })
 
         try {
             await this.updateTimeSheetUseCase.execute({
                 userId,
-                date,
+                registeredDay,
+                registeredMonth,
+                registeredYear,
                 adminId,
                 first_entrance,
                 first_exit,
                 second_entrance,
                 second_exit,
-                missed
+                missed,
             })
 
             return response.status(200).send({

@@ -12,10 +12,10 @@ export class GetAllStationsController {
     async handle(request: Request, response: Response) {
 
         try {
-            const positions = await this.getAllStationsUseCase.execute()
+            const stations = await this.getAllStationsUseCase.execute()
             
             return response.status(200).send({
-                positions
+                stations
             })
         } catch (error: any) {
             return response.status(500).send({

@@ -1,3 +1,4 @@
+import { ApiError } from "../../../entities/Error";
 import { TimeSheet } from "../../../entities/TimeSheet";
 import { IStationRepository } from "../../../repositories/IStationRepository";
 import { ITimeSheetRepository } from "../../../repositories/ITimeSheetRepository";
@@ -19,30 +20,31 @@ export class CreateTimeSheetUseCase {
     async execute(data: ICreateTimeSheetDTO) {
 
         const user = await this.userRepository.findById(data.userId)
-        if(!user) throw new Error('Usuário não cadastrado')
+        if(!user) throw new ApiError(400, 'Usuário não cadastrado')
 
         const station = await this.stationRepository.getById(user.props.stationId)
-        if(!station) throw new Error('Posto não encontrado')
+        if(!station) throw new ApiError(400, 'Posto não encontrado')
 
         const isInRadius = this.coordUtils.verifyIfCoordsInRadius(station.props.coord, { latitude: data.latitude, longitude: data.longitude}, 1)
-        if(!isInRadius) throw new Error('Distância entre o posto e o funcionário muito alta')
+        if(!isInRadius) throw new ApiError(400, 'Distância entre o posto e o funcionário muito alta')
 
         const existentTimeSheet = await this.timeSheetRepository.getByUserIdAndDate(data.userId, data.createdAt)
 
         if(!existentTimeSheet) {
             const timeSheet = new TimeSheet({
                 userId: data.userId,
-                registeredDay: data.createdAt.getDate(),
-                registeredMonth: data.createdAt.getMonth(),
-                registeredYear: data.createdAt.getFullYear(),
+                registeredDay: data.createdAt.getUTCDate(),
+                registeredMonth: data.createdAt.getUTCMonth(),
+                registeredYear: data.createdAt.getUTCFullYear(),
                 clockin: {
-                    first_entrance: data.createdAt.getTime(),
+                    first_entrance: BigInt(data.createdAt.getTime()),
                     missed: false
                 }
             })
             return await this.timeSheetRepository.save(timeSheet)
+        } else {
+            return await this.timeSheetRepository.setClockinById(existentTimeSheet.id, data.createdAt)
         }
         
-        return await this.timeSheetRepository.setClockinById(existentTimeSheet.id, data.createdAt)
     }
 }

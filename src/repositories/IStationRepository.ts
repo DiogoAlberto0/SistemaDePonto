@@ -8,4 +8,5 @@ export interface IStationRepository {
     getById(id: string): Promise<Station | null>
     getByCNPJ(cnpj: string): Promise<Station | null>
     getAll(): Promise<Station[]>
+    updateById(station: Station): Promise<Station>
 }

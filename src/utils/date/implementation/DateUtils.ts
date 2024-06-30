@@ -7,10 +7,10 @@ export class DateUtils implements IDateUtils {
         let currentDate = new Date(start)
 
         const dates = []
-        while(currentDate <= end) {
+        while(currentDate.getTime() <= end.getTime()) {
             dates.push(new Date(currentDate))
 
-            currentDate = new Date(currentDate.getDate() + 1)
+            currentDate.setDate(currentDate.getDate() + 1)
         }
 
         return dates

@@ -11,22 +11,18 @@ export class GetMonthsAndYearsController {
 
     async handle(request: Request, response: Response) {
 
-        const adminId = request.headers.userID as string
+        const adminId = request.headers.userId as string
         if(!adminId) return response.status(401).send({
             message: 'Usuário não autenticado'
         })
 
         const { userId } = request.query
-        if(!userId) return response.status(400).send({
-            message: 'Informe o usuário'
-        })
-
 
 
         try {
             const monthsAndYears = await this.getMonthsAndYearsUseCase.execute({
                 adminId,
-                userId: userId.toString(),
+                userId: userId ? userId.toString() : adminId,
             })
 
             return response.status(200).send({

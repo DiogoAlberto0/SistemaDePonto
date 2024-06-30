@@ -7,10 +7,10 @@ interface ITimeSheetProps {
     registeredMonth: number;
     registeredYear: number;
     clockin: {
-        first_entrance?: number | undefined;
-        first_exit?: number | undefined;
-        second_entrance?: number | undefined;
-        second_exit?: number | undefined;
+        first_entrance?: bigint | undefined;
+        first_exit?: bigint | undefined;
+        second_entrance?: bigint | undefined;
+        second_exit?: bigint | undefined;
         missed?: boolean;
         medicalCertificate?: boolean;
     }

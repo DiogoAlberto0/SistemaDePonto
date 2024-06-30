@@ -19,7 +19,7 @@ export class GetTimeSheetController {
             message: 'Usuário não autenticado'
         })
 
-        if(!userId || !year || ! month) return response.status(400).send({
+        if(!year || ! month) return response.status(400).send({
             message: 'Informe o funcionário o ano e o mês'
         })
 
@@ -34,13 +34,47 @@ export class GetTimeSheetController {
         try {
             const timeSheet = await this.getTimeSheetUseCase.execute({
                 adminId,
-                userId: userId.toString(),
+                userId: userId ? userId.toString() : adminId,
                 year: yearNumber,
                 month: monthNumber
             })
-    
+
+            const timeSheetResponse = timeSheet.map(({
+                id,
+                props: {
+                    userId,
+                    registeredDay,
+                    registeredMonth,
+                    registeredYear,
+                    clockin: {
+                        first_entrance,
+                        first_exit,
+                        second_entrance,
+                        second_exit,
+                        missed,
+                        medicalCertificate
+                    }
+                }
+            }) => ({
+                id,
+                props: {
+                    userId,
+                    registeredDay,
+                    registeredMonth,
+                    registeredYear,
+                    clockin: {
+                        first_entrance: Number(first_entrance),
+                        first_exit: Number(second_entrance),
+                        second_entrance: Number(first_exit),
+                        second_exit: Number(second_exit),
+                        missed,
+                        medicalCertificate
+                    }
+                }
+            }))
+
             return response.status(200).send({
-                timeSheet
+                timeSheet: timeSheetResponse
             })
         } catch (error: any) {
             return response.status(error.status || 500).send({

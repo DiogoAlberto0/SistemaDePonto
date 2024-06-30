@@ -19,7 +19,7 @@ Este projeto é o backend para o Sistema de Ponto, responsável por fornecer as 
 2. Navegue até o diretório do projeto:
 
     ```sh
-    cd rr_back
+    cd SistemaDePonto_Back
     ```
 
 3. Instale as dependências:

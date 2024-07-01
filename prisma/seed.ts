@@ -26,7 +26,7 @@ async function main() {
     const user = await prisma.user.create({
         data: {
             name: 'ADMIN',
-            phone: '123456789',
+            phone: '00123456789',
             positionId: position.id,
             stationId: station.id,
             hash: passUtils.hash('12345')

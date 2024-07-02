@@ -17,7 +17,7 @@ export class GetAllPositionsController {
                 positions
             })
         } catch (error:any) {
-            return response.status(500).send({
+            response.status(error.status || 500).send({
                 message: error.message || 'Ocorreu um erro inesperado'
             })
         }

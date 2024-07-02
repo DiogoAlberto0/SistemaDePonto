@@ -38,7 +38,7 @@ export class GetUserByIdController {
                 position: user.position
             })
         } catch (error: any) {
-            return response.status(500).send({
+            return response.status(error.status || 500).send({
                 message: error.message || 'Ocorreu um erro inesperado'
             })
         }

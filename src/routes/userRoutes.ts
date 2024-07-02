@@ -19,7 +19,7 @@ userRoutes.get('/users',
 )
 
 userRoutes.get('/user', 
-    (request, response, next) => validateUserController.handle(request, response, next, 2),
+    (request, response, next) => validateUserController.handle(request, response, next, 1),
     (request, response) => getUserByIdController.handle(request, response)
 )
 

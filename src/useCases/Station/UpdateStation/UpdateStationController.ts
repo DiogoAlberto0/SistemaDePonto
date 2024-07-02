@@ -39,7 +39,7 @@ export class UpdateStationController {
                 message: 'Posto atualizado com sucesso'
             })
         } catch (error: any) {
-            return response.status(500).send({
+            response.status(error.status || 500).send({
                 message: error.message || 'Unexpecter error'
             })
         }

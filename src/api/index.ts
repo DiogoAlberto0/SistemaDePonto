@@ -1,7 +1,7 @@
 import { Server } from 'http'
 
-import { app } from './app'
-import { prisma } from './repositories/prismaImplementation/prismaConnection'
+import { app } from '../app'
+import { prisma } from '../repositories/prismaImplementation/prismaConnection'
 
 const port = 4000
 

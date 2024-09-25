@@ -16,10 +16,10 @@ app.use(express.json())
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
-app.use(stationRoutes)
-app.use(positionRoutes)
-app.use(timeSheetRoutes)
-app.use(userRoutes)
+// app.use(stationRoutes)
+// app.use(positionRoutes)
+// app.use(timeSheetRoutes)
+// app.use(userRoutes)
 
 
 app.listen(port, () => {

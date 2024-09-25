@@ -7,7 +7,7 @@
     "dev": "nodemon --watch src/ --exec ts-node src/api/index.ts ",
     "next_build": "npx prisma generate && npx prisma migrate deploy && npm run seed && npx tsc",
     "build": "npx prisma generate && npx prisma migrate deploy && npm run seed && npx tsc",
-    "start": "node dist/api/index.js",
+    "start": "node public/api/index.js",
     "seed": "ts-node prisma/seed.ts",
     "migrate_dev": "npx prisma migrate dev",
     "test": "vitest"
